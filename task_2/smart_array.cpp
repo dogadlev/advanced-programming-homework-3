@@ -8,6 +8,16 @@ SmartArray::SmartArray(int logicalSize) {
 SmartArray::~SmartArray() {
 	delete[] _arr;
 }
+
+//Конструктор копирования.
+SmartArray::SmartArray(SmartArray& other) {
+	_Lsize = other._Lsize;
+	_arr = new int[_Lsize];
+	for (int i = 0; i < other._size; ++i) {
+		add_element(other.get_element(i));
+	}
+}
+
 void SmartArray::add_element(int newElement) {
 	//Если массив заполнен, удвоим его размер (логический).
 	if (_size == _Lsize) {
@@ -22,6 +32,7 @@ void SmartArray::add_element(int newElement) {
 	_arr[_size] = newElement;
 	++_size;
 }
+
 int SmartArray::get_element(int index) {
 	//Если запрашиваемый индекс находится вне массива (заполненного), выбрасываем исключение.
 	if (index >= _size) {
@@ -29,12 +40,18 @@ int SmartArray::get_element(int index) {
 	}
 	return _arr[index];
 }
+
 int SmartArray::getSize() { return _size; }
-SmartArray& SmartArray::operator=(SmartArray& arr) {
-	_size = 0;
-	_Lsize = arr._Lsize;
-	for (int i = 0; i < arr._size; ++i) {
-		add_element(arr.get_element(i));
+
+SmartArray& SmartArray::operator=(SmartArray& other) {
+	if (this != &other) {
+		delete[] _arr;
+		_size = 0;
+		_Lsize = other._Lsize;
+		_arr = new int[_Lsize];
+		for (int i = 0; i < other._size; ++i) {
+			add_element(other.get_element(i));
+		}
 	}
 	return *this;
 }
